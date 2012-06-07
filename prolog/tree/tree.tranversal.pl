@@ -1,4 +1,4 @@
-%-- /* tree database */
+ /* tree database */
 :- op(500, xfx, is_parent_of).
 
 a is_parent_of b. 
@@ -17,9 +17,9 @@ a is_parent_of c.
     i is_parent_of p.
 a is_parent_of d.
   d is_parent_of j.
-    j is_parent_of q.
-    j is_parent_of r.
-    j is_parent_of s.
+    j is_parent_of q .
+    j is_parent_of r .
+    j is_parent_of s .
 
 /* X and Y are slibings */
 :- op(500, xfx, is_slibing_of).
@@ -38,4 +38,33 @@ X is_same_level_as Y :-
   Z is_parent_of Y,
   W is_same_level_as Z.
 
+/* Depth of node in the tree*/
+:- op(500, xfx, 'has_depth').
+a has_depth 0 :- !.
+Node has_depth Depth :- 
+  Parent is_parent_of Node,
+  Parent has_depth D1,
+  D is D1 + 1.
+
+/*Locate node by finding a path from root down to the node.*/
+path(a).
+path(Node) :- 
+  Parent is_parent_of Node,
+  path(Parent),
+  write(Parent),
+  write('-->').
+
+locate(Node) :- 
+  path(Node),
+  write(Node),
+  nl.
+
+/* leaf */
+leaf(Node) :- not(is_parent_of(Node, Child)).
+
+max([], M, M).
+max([H|T], M, A) :- (H > M -> max(T, H, A); max(T, M, A))
+
+
+/*  */
   
